@@ -90,7 +90,7 @@ adminRouter.get('/categories', async (req, res, next) => {
 });
 
 // 카테고리 상세 조회
-adminRouter.get('/categories/:id', adminRequired, async (req, res, next) => {
+adminRouter.get('/categories/:shortId', adminRequired, async (req, res, next) => {
   try {
     const { shortId } = req.params;
     const category = await categoryService.getCategory(shortId);
