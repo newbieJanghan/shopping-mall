@@ -102,7 +102,7 @@ adminRouter.get('/categories/:id', adminRequired, async (req, res, next) => {
 
 // 카테고리 변경
 adminRouter.patch(
-  '/categories/:id/update',
+  '/categories/:shortId/update',
   adminRequired,
   async (req, res, next) => {
     try {
@@ -114,15 +114,23 @@ adminRouter.patch(
         );
       }
       const { shortId } = req.params;
-      const { name, content, imageURL } = req.body;
+
+      // const { name, content, imageURL } = req.body;
+      // const toUpdate = {
+      //   ...(name && { name }),
+      //   ...(content && { content }),
+      //   ...(imageURL && { imageURL }),
+      // };
 
       // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
-      // 따라서 업데이트하지 않은 값이 db 상에서 그대로 유지됨.
-      const toUpdate = {
-        ...(name && { name }),
-        ...(content && { content }),
-        ...(imageURL && { imageURL }),
-      };
+      // 따라서 아무 값도 없는 경우 db 상에서 기존 값이 그대로 유지됨.
+      // login에서는 중요하나, product나 category에서는 중요한가? 싶음.
+      const toUpdate = req.body;
+      for (let key of Object.keys(toUpdate)) {
+        if (!toUpdate[key]) {
+          delete toUpdate[key];
+        }
+      }
 
       const updatedCategory = await categoryService.setCategory(
         shortId,
@@ -137,7 +145,7 @@ adminRouter.patch(
 
 // 카테고리 삭제
 adminRouter.delete(
-  '/categories/:id/delete',
+  '/categories/:shortId/delete',
   adminRequired,
   async (req, res, next) => {
     try {
@@ -219,49 +227,53 @@ adminRouter.delete(
 );
 
 // 상품 정보 수정
-adminRouter.patch('/products/:shortId', adminRequired, async (req, res, next) => {
-  try {
-    const { shortId } = req.params;
-    // const {
-    //   category,
-    //   brand,
-    //   name,
-    //   shortDescription,
-    //   detailDescription,
-    //   imageURL,
-    //   price,
-    //   likeCount,
-    //   likeUsers,
-    // } = req.body;
+adminRouter.patch(
+  '/products/:shortId',
+  adminRequired,
+  async (req, res, next) => {
+    try {
+      const { shortId } = req.params;
+      // const {
+      //   category,
+      //   brand,
+      //   name,
+      //   shortDescription,
+      //   detailDescription,
+      //   imageURL,
+      //   price,
+      //   likeCount,
+      //   likeUsers,
+      // } = req.body;
 
-    // const toUpdate = {
-    //   ...(category && { category }),
-    //   ...(brand && { brand }),
-    //   ...(name && { name }),
-    //   ...(shortDescription && { shortDescription }),
-    //   ...(detailDescription && { detailDescription }),
-    //   ...(imageURL && { imageURL }),
-    //   ...(price && { price }),
-    //   ...(likeCount && { likeCount }),
-    //   ...(likeUsers && { likeUsers }),
-    // };
+      // const toUpdate = {
+      //   ...(category && { category }),
+      //   ...(brand && { brand }),
+      //   ...(name && { name }),
+      //   ...(shortDescription && { shortDescription }),
+      //   ...(detailDescription && { detailDescription }),
+      //   ...(imageURL && { imageURL }),
+      //   ...(price && { price }),
+      //   ...(likeCount && { likeCount }),
+      //   ...(likeUsers && { likeUsers }),
+      // };
 
-    // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
-    // 따라서 아무 값도 없는 경우 db 상에서 기존 값이 그대로 유지됨.
-    // login에서는 중요하나, product나 category에서는 중요한가? 싶음.
-    const toUpdate = req.body;
-    for (let key of Object.keys(toUpdate)) {
-      if (!toUpdate[key]) {
-        delete toUpdate[key];
+      // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
+      // 따라서 아무 값도 없는 경우 db 상에서 기존 값이 그대로 유지됨.
+      // login에서는 중요하나, product나 category에서는 중요한가? 싶음.
+      const toUpdate = req.body;
+      for (let key of Object.keys(toUpdate)) {
+        if (!toUpdate[key]) {
+          delete toUpdate[key];
+        }
       }
-    }
 
-    const updatedProduct = await productService.setProduct(shortId, toUpdate);
-    res.status(200).json(updatedProduct);
-  } catch (err) {
-    next(err);
-  }
-});
+      const updatedProduct = await productService.setProduct(shortId, toUpdate);
+      res.status(200).json(updatedProduct);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 /******************************/
 /********* user,order *********/
