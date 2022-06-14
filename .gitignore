@@ -2,3 +2,4 @@
 node_modules
 yarn.lock
 src/public/css/main.css
+.env
