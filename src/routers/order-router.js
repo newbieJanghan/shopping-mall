@@ -63,7 +63,7 @@ orderRouter.get('/', loginRequired, async function (req, res, next) {
 // 사용자의 특정 주문 상세 조회
 orderRouter.get('/:shortId', loginRequired, async function (req, res, next) {
   try {
-    const shortId = req.params.shortId;
+    const { shortId } = req.params;
     const orderInfo = await orderService.getOrderInfo(shortId);
     res.status(200).json(orderInfo);
   } catch (error) {
@@ -74,7 +74,7 @@ orderRouter.get('/:shortId', loginRequired, async function (req, res, next) {
 // 주문 취소
 orderRouter.patch('/:shortId', loginRequired, async (req, res, next) => {
   try {
-    const shortId = req.params.shortId;
+    const { shortId } = req.params;
     const updatedOrder = await orderService.updateOrder(shortId);
     res.status(200).json(updatedOrder);
   } catch (error) {
