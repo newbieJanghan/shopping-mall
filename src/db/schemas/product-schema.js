@@ -39,7 +39,7 @@ const ProductSchema = new Schema(
     },
     likeUsers: [{ userId: { type: String } }],
     stocks: {
-      type: Schema.Types.Mixed,
+      type: Array,
       required: true,
     }
   },

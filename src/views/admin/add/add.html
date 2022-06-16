@@ -189,6 +189,40 @@
                 </button>
               </div>
             </form>
+            <div class="box register-product-form-box">
+              <div class="field">
+                <label class="label" for="sizeInput"
+                  >추가할 사이즈를 입력하세요</label
+                >
+                <div class="control">
+                  <input
+                    class="input"
+                    id="sizeInput"
+                    type="text"
+                    placeholder="S, M, L"
+                    autocomplete="on"
+                  />
+                </div>
+                <button id="addSizeButton">사이즈 추가</button>
+              </div>
+              <form id="addStocksBySizeForm" name="stocksInputForm">
+                <div class="field">
+                  <label class="label" for="stockInput"
+                    >XS</label
+                  >
+                  <div class="control">
+                    <input
+                      class="input"
+                      name="stocksInput"
+                      id="XS"
+                      type="number"
+                      placeholder="100"
+                      autocomplete="on"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
           <!-- CONTENT : END -->
         </div>
