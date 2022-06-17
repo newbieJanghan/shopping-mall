@@ -12,6 +12,7 @@ const $deleteAcceptButton = document.querySelector('#deleteAcceptButton');
 const $imageInput = document.querySelector('#imageInput');
 const $fileForm = document.querySelector('#fileForm');
 const $fileNameSpan = document.querySelector('#fileNameSpan');
+const $stockSpan = document.querySelector('#stockSpan');
 
 const elements = [
   $title,
@@ -65,6 +66,19 @@ async function printDetail() {
     $shortDescription.value = product.shortDescription;
     $detailDescription.value = product.detailDescription;
     $image.src = product.imageURL;
+    const stock = product.stock;
+    if (typeof stock !== "object") {
+      $stockSpan.textContent = '재고 없음';
+    } else {
+      const keys = Object.keys(stock);
+      const stockText = keys.reduce(
+        (acc, key) =>
+          (acc += `${key}: ${stock[key]}
+      `),
+        '',
+      );
+      $stockSpan.textContent = stockText;
+    }
   } catch (error) {
     console.error(error);
   }

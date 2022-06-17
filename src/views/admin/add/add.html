@@ -18,6 +18,14 @@
     <script src="/static/js/navbar.js" type="module"></script>
     <!-- custom -->
     <script src="add.js" type="module" defer></script>
+    <script>
+      // 생성된 tag들이 onclick 이벤트 함수를 읽을 수 있도록 여기에 함수 정의해둠.
+      function delSize(event) {
+        event.preventDefault();
+        const parent = event.target.parentNode;
+        parent.innerHTML = '';
+      }
+    </script>
   </head>
   <body>
     <div id="app">
@@ -205,23 +213,24 @@
                 </div>
                 <button id="addSizeButton">사이즈 추가</button>
               </div>
-              <form id="addStocksBySizeForm" name="stocksInputForm">
-                <div class="field">
-                  <label class="label" for="stockInput"
-                    >XS</label
-                  >
+              <div id="addStockBySizeForm" name="stockInputForm">
+                <div class="field" id="XS-container">
+                  <label class="label" for="stockInput">XS</label>
                   <div class="control">
                     <input
                       class="input"
-                      name="stocksInput"
+                      name="stockInput"
                       id="XS"
-                      type="number"
+                      type="number" 
                       placeholder="100"
                       autocomplete="on"
                     />
                   </div>
+                  <button type="button" class="delSizeButton" onclick="delSize(event)">
+                    사이즈 삭제
+                  </button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
           <!-- CONTENT : END -->

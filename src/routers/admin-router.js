@@ -173,8 +173,8 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       detailDescription,
       imageURL,
       price,
+      stock
     } = req.body;
-
     const newproduct = await productService.addProduct({
       category,
       brand,
@@ -183,6 +183,7 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       detailDescription,
       imageURL,
       price,
+      stock
     });
     res.status(200).json(newproduct);
   } catch (err) {

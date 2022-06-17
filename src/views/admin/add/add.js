@@ -10,7 +10,8 @@ const $price = document.querySelector('#priceInput');
 const $imageInput = document.querySelector('#imageInput');
 const $fileNameSpan = document.querySelector('#fileNameSpan');
 const $addSizeButton = document.querySelector('#addSizeButton');
-const $addStocksBySizeForm = document.querySelector('#addStocksBySizeForm')
+// const $delSizeButton = document.querySelector('.delSizeButton');
+const $addStockbySizeForm = document.querySelector('#addStockBySizeForm');
 
 function applyFileName(event) {
   $fileNameSpan.innerHTML = event.target.files[0].name;
@@ -39,10 +40,10 @@ async function addProduct(e) {
     const result = await Api.postImage(formData);
 
     const newProductData = getData(result.url);
-    console.log(newProductData)
+    console.log(newProductData);
     await Api.post('/api/admin/products', newProductData);
     alert('상품이 성공적으로 추가되었습니다!');
-    location.reload();
+    // location.reload();
   } catch (err) {
     if (err.message === 'Invalid Value') {
       alert('채워지지 않은 항목이 있습니다.');
@@ -54,8 +55,8 @@ async function addProduct(e) {
 
 function getData(imageURL) {
   // stock object 가져오기
-  const stocks = getStocks()
-  console.log(stocks)
+  const stock = getStock();
+  console.log(stock);
   const newProductData = {
     name: $title.value,
     brand: $brand.value,
@@ -64,7 +65,7 @@ function getData(imageURL) {
     price: $price.value,
     category: $categorySelectBox.value,
     imageURL,
-    stocks: [stocks]
+    stock,
   };
 
   // 비워져있는 칸이 있는지 검증
@@ -89,22 +90,24 @@ async function addSize(event) {
 
     const sizes = sizeInputValue.split(',');
     sizes.map((size) => {
-      $addStocksBySizeForm.insertAdjacentHTML(
+      $addStockbySizeForm.insertAdjacentHTML(
         'beforeend',
         `
-      <div class="field">
+      <div class="field" id=${size}-container>
       <label class="label" for="stockInput"
         >${size}</label
       >
       <div class="control">
         <input
           class="input"
-          name="stocksInput"
+          name="stockInput"
           id="${size}"
           type="number"
           placeholder="100"
           autocomplete="on"
         />
+      </div>
+      <button type="button" class="delSizeButton" onclick="delSize(event)">사이즈 삭제</button>
       </div>
       `,
       );
@@ -114,23 +117,30 @@ async function addSize(event) {
     return;
   }
 }
+/* html script에 정의함
+async function delSize(event) {
+  event.preventDefault();
+  const parent = event.target.parentNode;
+  parent.innerHTML = '';
+} */
 
-function getStocks() {
-  const form = document.forms["stocksInputForm"].elements["stocksInput"]
-  const formData = new FormData()
-  if (!form.length) {
-    const key = form.getAttribute('id')
-    const value = form.value
+function getStock() {
+  const stockContainer = document.querySelectorAll('input[name="stockInput"]');
+  const formData = new FormData();
+  if (!stockContainer.length) {
+    const key = stockContainer.getAttribute('id');
+    const value = stockContainer.value;
     formData[key] = value;
   } else {
-    form.forEach(node => {
-      const key = node.getAttribute('id')
-      const value = node.value
+    stockContainer.forEach((node) => {
+      const key = node.getAttribute('id').trim();
+      const value = node.value;
       formData[key] = value;
-    })
+    });
   }
-  const object = JSON.stringify(formData)
-  return JSON.parse(object)
+  const object = JSON.stringify(formData);
+  const result = JSON.parse(object);
+  return result;
 }
 
 getCategories();
@@ -138,3 +148,4 @@ getCategories();
 $productForm.addEventListener('submit', addProduct);
 $imageInput.addEventListener('change', applyFileName);
 $addSizeButton.addEventListener('click', addSize);
+// $delSizeButton.addEventListener('click', delSize);

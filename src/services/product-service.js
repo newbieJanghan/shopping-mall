@@ -14,7 +14,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
-      stocks
+      stock
     } = productInfo;
 
     const product = await this.productModel.findByName(name);
@@ -31,7 +31,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price: Number(price),
-      stocks
+      stock
     };
 
     // db에 저장
