@@ -135,7 +135,7 @@ function getStock() {
     stockContainer.forEach((node) => {
       const key = node.getAttribute('id').trim();
       const value = node.value;
-      formData[key] = value;
+      formData[key] = Number(value);
     });
   }
   const object = JSON.stringify(formData);
