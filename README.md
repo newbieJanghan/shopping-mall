@@ -22,15 +22,3 @@
 
 
 <br>
-
-
-## 3. 기술 스택
-
-![image](https://i.ibb.co/N34mXzy/image.png)
-
-<br />
-
-## 4. 인프라 구조
-
-![image](https://i.ibb.co/9tGxmx0/image.png)<br />
-
