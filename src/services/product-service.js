@@ -12,16 +12,16 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
+      hashtag,
       imageURL,
       price,
-      stock
+      stock,
     } = productInfo;
 
     const product = await this.productModel.findByName(name);
     if (product) {
       throw new Error('이미 해당 상품이 존재합니다.');
     }
-
     const categoryId = await categoryService.getIdByName(category);
     const newProductInfo = {
       categoryId,
@@ -29,9 +29,10 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
+      hashtag,
       imageURL,
       price: Number(price),
-      stock
+      stock,
     };
 
     // db에 저장
@@ -124,7 +125,7 @@ class ProductService {
     if (!product) {
       throw new Error('삭제에 실패하였습니다.');
     }
-    
+
     return product;
   }
 

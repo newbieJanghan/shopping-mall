@@ -7,6 +7,7 @@ const $categories = document.querySelector('#categorySelectBox');
 const $brand = document.querySelector('#productBrand');
 const $shortDescription = document.querySelector('#shortDescription');
 const $detailDescription = document.querySelector('#detailDescription');
+const $hashtag = document.querySelector('#hashtag');
 const $editButton = document.querySelector('#editButton');
 const $deleteAcceptButton = document.querySelector('#deleteAcceptButton');
 const $imageInput = document.querySelector('#imageInput');
@@ -21,6 +22,7 @@ const elements = [
   $brand,
   $shortDescription,
   $detailDescription,
+  $hashtag
 ];
 
 const path = window.location.pathname.split('/');
@@ -65,6 +67,7 @@ async function printDetail() {
     $brand.value = product.brand;
     $shortDescription.value = product.shortDescription;
     $detailDescription.value = product.detailDescription;
+    $hashtag.value = product.hashtag;
     $image.src = product.imageURL;
     const stock = product.stock;
     if (typeof stock !== "object") {
@@ -84,6 +87,21 @@ async function printDetail() {
   }
 }
 
+const getHashtag = (hashtag) => {
+  if (!hashtag.length) {
+    const result = hashtag.trim().substr(1);
+    console.log(`in no array condition: ${result}`)
+    return result;
+  } else {
+    const result = hashtag.split(',')
+    // .map((input) => {
+    //   input.substr(1).trim();
+    // });
+    console.log(`in array condition: ${typeof result} ${result}`)
+    return result;
+  }
+}
+
 async function patchData() {
   const newProductData = {
     name: $title.value,
@@ -92,6 +110,7 @@ async function patchData() {
     category: $categories.value,
     shortDescription: $shortDescription.value,
     detailDescription: $detailDescription.value,
+    hashtag:$hashtag.value,
     imageURL: $image.src,
   };
 

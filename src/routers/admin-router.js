@@ -171,16 +171,19 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       name,
       shortDescription,
       detailDescription,
+      hashtag,
       imageURL,
       price,
       stock
     } = req.body;
+    
     const newproduct = await productService.addProduct({
       category,
       brand,
       name,
       shortDescription,
       detailDescription,
+      hashtag,
       imageURL,
       price,
       stock

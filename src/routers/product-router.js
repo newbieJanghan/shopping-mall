@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import is from '@sindresorhus/is';
 import { productService, categoryService } from '../services';
-import { pagination, loginRequired } from '../middlewares';
+import { loginRequired } from '../middlewares';
+import { pagination } from '../utils';
 
 const productRouter = Router();
 

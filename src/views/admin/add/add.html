@@ -110,6 +110,19 @@
                 </div>
               </div>
 
+              <div class="field">
+                <label class="label" for="hashtagInput">태그</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="hashtagInput"
+                    type="text"
+                    placeholder="여름, 바지, 베이지"
+                    autocomplete="on"
+                  />
+                </div>
+              </div>
+
               <div class="field is-fullwidth">
                 <label class="label" for="imageInput">제품 사진</label>
                 <!-- <img id="productImg" alt="product-img" /> -->
@@ -221,12 +234,16 @@
                       class="input"
                       name="stockInput"
                       id="XS"
-                      type="number" 
+                      type="number"
                       placeholder="100"
                       autocomplete="on"
                     />
                   </div>
-                  <button type="button" class="delSizeButton" onclick="delSize(event)">
+                  <button
+                    type="button"
+                    class="delSizeButton"
+                    onclick="delSize(event)"
+                  >
                     사이즈 삭제
                   </button>
                 </div>
