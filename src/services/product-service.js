@@ -12,7 +12,7 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
-      hashtag,
+      keyword,
       imageURL,
       price,
       stock,
@@ -29,7 +29,7 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
-      hashtag,
+      keyword,
       imageURL,
       price: Number(price),
       stock,
@@ -59,6 +59,9 @@ class ProductService {
 
   // name으로 상품 검색
   async getProductsByName(filter) {
+    if (filter === '') {
+      throw new Error('검색어를 입력하세요.')
+    }
     const products = await this.productModel.findBySearch(filter);
     return products;
   }
@@ -92,7 +95,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
-      hashtag,
+      keyword,
     } = await updateRequest;
 
     const update = {
@@ -103,7 +106,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
-      hashtag,
+      keyword,
     };
 
     // 업데이트 진행

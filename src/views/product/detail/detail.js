@@ -45,8 +45,8 @@ async function addAllEvents(data) {
   });
 }
 
-function printTag(hashtag) {
-  return hashtag
+function printTag(keyword) {
+  return keyword
     .map(el => "#"+el)
     .reduce((acc, cur) => (acc += `, ${cur}`),);
 }
@@ -84,7 +84,7 @@ async function detailText() {
                 ${data.detailDescription}
               </p>
               <p class="p-contents">
-                ${printTag(data.hashtag)}
+                ${printTag(data.keyword)}
               </p>
               <div>
                 <div class="btn-wrap">

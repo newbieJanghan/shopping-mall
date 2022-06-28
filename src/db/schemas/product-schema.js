@@ -42,7 +42,7 @@ const ProductSchema = new Schema(
       type: Schema.Types.Mixed,
       required: true,
     },
-    hashtag: []
+    keyword: []
   },
   {
     timestamps: true,

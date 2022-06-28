@@ -7,7 +7,7 @@ const $categories = document.querySelector('#categorySelectBox');
 const $brand = document.querySelector('#productBrand');
 const $shortDescription = document.querySelector('#shortDescription');
 const $detailDescription = document.querySelector('#detailDescription');
-const $hashtag = document.querySelector('#hashtag');
+const $keyword = document.querySelector('#keyword');
 const $editButton = document.querySelector('#editButton');
 const $deleteAcceptButton = document.querySelector('#deleteAcceptButton');
 const $imageInput = document.querySelector('#imageInput');
@@ -22,7 +22,7 @@ const elements = [
   $brand,
   $shortDescription,
   $detailDescription,
-  $hashtag,
+  $keyword,
 ];
 
 const path = window.location.pathname.split('/');
@@ -61,15 +61,13 @@ async function printDetail() {
   try {
     // 상품 상세를 불러와 input 에 주입
     const product = await Api.get('/api/admin/products', id);
-
-    console.log(typeof product.hashtag, product.hashtag);
     $title.value = product.name;
     $price.value = product.price;
     $categories.value = product.categoryId;
     $brand.value = product.brand;
     $shortDescription.value = product.shortDescription;
     $detailDescription.value = product.detailDescription;
-    $hashtag.value = product.hashtag
+    $keyword.value = product.keyword
       .map(el => "#" + el)
       .reduce(
       (acc, cur) => (acc += `, ${cur}`),
@@ -93,8 +91,8 @@ async function printDetail() {
   }
 }
 
-function getHashtag(hashtag) {
-  const result = hashtag
+function getKeyword(keyword) {
+  const result = keyword
     .split(',')
     .map((input) => input.trim())
     .map((input) => {
@@ -110,8 +108,8 @@ function getHashtag(hashtag) {
 
 async function patchData() {
   try {
-    const hashtagValue = $hashtag.value
-    const hashtag = getHashtag(hashtagValue)
+    const keywordValue = $keyword.value
+    const keyword = getKeyword(keywordValue)
 
     const newProductData = {
       name: $title.value,
@@ -120,7 +118,7 @@ async function patchData() {
       category: $categories.value,
       shortDescription: $shortDescription.value,
       detailDescription: $detailDescription.value,
-      hashtag,
+      keyword,
       imageURL: $image.src,
     };
 

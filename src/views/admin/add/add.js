@@ -6,7 +6,7 @@ const $categorySelectBox = document.querySelector('#categorySelectBox');
 const $brand = document.querySelector('#manufacturerInput');
 const $shortDescription = document.querySelector('#shortDescriptionInput');
 const $detailDescription = document.querySelector('#detailDescriptionInput');
-const $hashtag = document.querySelector('#hashtagInput');
+const $keyword = document.querySelector('#keywordInput');
 const $price = document.querySelector('#priceInput');
 const $imageInput = document.querySelector('#imageInput');
 const $fileNameSpan = document.querySelector('#fileNameSpan');
@@ -58,16 +58,16 @@ function getData(imageURL) {
   // stock object 가져오기
   const stock = getStock();
 
-  // hashtag
-  const hashtagValue = $hashtag.value;
-  const hashtag = getHashtag(hashtagValue);
+  // keyword
+  const keywordValue = $keyword.value;
+  const keyword = getKeyword(keywordValue);
 
   const newProductData = {
     name: $title.value,
     brand: $brand.value,
     shortDescription: $shortDescription.value,
     detailDescription: $detailDescription.value,
-    hashtag,
+    keyword,
     price: $price.value,
     category: $categorySelectBox.value,
     imageURL,
@@ -158,8 +158,8 @@ function getStock() {
   return result;
 }
 
-function getHashtag(hashtag) {
-  const result = hashtag
+function getKeyword(keyword) {
+  const result = keyword
     .split(',')
     .map((input) => input.trim())
     .map((input) => {

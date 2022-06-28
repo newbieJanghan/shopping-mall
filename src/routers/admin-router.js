@@ -171,7 +171,7 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       name,
       shortDescription,
       detailDescription,
-      hashtag,
+      keyword,
       imageURL,
       price,
       stock
@@ -183,7 +183,7 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       name,
       shortDescription,
       detailDescription,
-      hashtag,
+      keyword,
       imageURL,
       price,
       stock
