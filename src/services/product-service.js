@@ -92,6 +92,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
+      hashtag,
     } = await updateRequest;
 
     const update = {
@@ -102,6 +103,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
+      hashtag,
     };
 
     // 업데이트 진행

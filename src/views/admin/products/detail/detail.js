@@ -22,7 +22,7 @@ const elements = [
   $brand,
   $shortDescription,
   $detailDescription,
-  $hashtag
+  $hashtag,
 ];
 
 const path = window.location.pathname.split('/');
@@ -61,16 +61,22 @@ async function printDetail() {
   try {
     // 상품 상세를 불러와 input 에 주입
     const product = await Api.get('/api/admin/products', id);
+
+    console.log(typeof product.hashtag, product.hashtag);
     $title.value = product.name;
     $price.value = product.price;
     $categories.value = product.categoryId;
     $brand.value = product.brand;
     $shortDescription.value = product.shortDescription;
     $detailDescription.value = product.detailDescription;
-    $hashtag.value = product.hashtag;
+    $hashtag.value = product.hashtag
+      .map(el => "#" + el)
+      .reduce(
+      (acc, cur) => (acc += `, ${cur}`),
+    );
     $image.src = product.imageURL;
     const stock = product.stock;
-    if (typeof stock !== "object") {
+    if (typeof stock !== 'object') {
       $stockSpan.textContent = '재고 없음';
     } else {
       const keys = Object.keys(stock);
@@ -87,34 +93,41 @@ async function printDetail() {
   }
 }
 
-const getHashtag = (hashtag) => {
-  if (!hashtag.length) {
-    const result = hashtag.trim().substr(1);
-    console.log(`in no array condition: ${result}`)
-    return result;
-  } else {
-    const result = hashtag.split(',')
-    // .map((input) => {
-    //   input.substr(1).trim();
-    // });
-    console.log(`in array condition: ${typeof result} ${result}`)
-    return result;
-  }
-}
+function getHashtag(hashtag) {
+  const result = hashtag
+    .split(',')
+    .map((input) => input.trim())
+    .map((input) => {
+      if (input.charAt() == '#') {
+        return input.replace('#', '');
+      } else {
+        return undefined;
+      }
+    })
+    .filter((el) => el);
+  return result;
+};
 
 async function patchData() {
-  const newProductData = {
-    name: $title.value,
-    brand: $brand.value,
-    price: $price.value,
-    category: $categories.value,
-    shortDescription: $shortDescription.value,
-    detailDescription: $detailDescription.value,
-    hashtag:$hashtag.value,
-    imageURL: $image.src,
-  };
+  try {
+    const hashtagValue = $hashtag.value
+    const hashtag = getHashtag(hashtagValue)
 
-  await Api.patch('/api/admin/products', id, newProductData);
+    const newProductData = {
+      name: $title.value,
+      brand: $brand.value,
+      price: $price.value,
+      category: $categories.value,
+      shortDescription: $shortDescription.value,
+      detailDescription: $detailDescription.value,
+      hashtag,
+      imageURL: $image.src,
+    };
+
+    await Api.patch('/api/admin/products', id, newProductData);
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function editDetail(event) {

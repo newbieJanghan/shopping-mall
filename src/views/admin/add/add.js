@@ -54,21 +54,6 @@ async function addProduct(e) {
   }
 }
 
-const getHashtag = (hashtag) => {
-  const result = hashtag
-    .split(',')
-    .map((input) => input.trim())
-    .map((input) => {
-      if (input.charAt() == '#') {
-        return input.replace('#', '');
-      } else {
-        return undefined;
-      }
-    })
-    .filter((el) => el);
-  return result;
-};
-
 function getData(imageURL) {
   // stock object 가져오기
   const stock = getStock();
@@ -147,7 +132,15 @@ async function delSize(event) {
 
 function getStock() {
   const stockContainer = document.querySelectorAll('input[name="stockInput"]');
-  const formData = new FormData();
+  const result = new Object()
+  const stocks = !stockContainer.length ? [stockContainer] : stockContainer
+  stocks.forEach((node) => {
+    if (!node.value) {
+      alert("재고를 입력해주세요.")
+    }
+    result[node.getAttribute('id').trim()] = Number(node.value);
+  });
+  /*
   if (!stockContainer.length) {
     const key = stockContainer.getAttribute('id');
     const value = stockContainer.value;
@@ -161,8 +154,25 @@ function getStock() {
   }
   const object = JSON.stringify(formData);
   const result = JSON.parse(object);
+  */
   return result;
 }
+
+function getHashtag(hashtag) {
+  const result = hashtag
+    .split(',')
+    .map((input) => input.trim())
+    .map((input) => {
+      if (input.charAt() == '#') {
+        return input.replace('#', '');
+      } else {
+        return undefined;
+      }
+    })
+    .filter((el) => el);
+  return result;
+};
+
 
 getCategories();
 
