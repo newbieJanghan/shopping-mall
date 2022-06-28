@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 import { shortId } from './types/short-id';
 
-const HashtagSchema = new Schema({tag: String})
 const ProductSchema = new Schema(
   {
     shortId,
@@ -43,7 +42,7 @@ const ProductSchema = new Schema(
       type: Schema.Types.Mixed,
       required: true,
     },
-    hashtag: [HashtagSchema]
+    hashtag: []
   },
   {
     timestamps: true,

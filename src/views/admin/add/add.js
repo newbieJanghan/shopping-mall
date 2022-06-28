@@ -41,7 +41,7 @@ async function addProduct(e) {
     const result = await Api.postImage(formData);
 
     const newProductData = getData(result.url);
-    console.log(newProductData);
+
     await Api.post('/api/admin/products', newProductData);
     alert('상품이 성공적으로 추가되었습니다!');
     // location.reload();
@@ -55,27 +55,34 @@ async function addProduct(e) {
 }
 
 const getHashtag = (hashtag) => {
-  if (!hashtag.length) {
-    const result = hashtag.trim().substr(1);
-    return result;
-  } else {
-    const result = hashtag.split(',').map((input) => {
-      input.substr(1).trim();
-    });
-    return result;
-  }
-}
+  const result = hashtag
+    .split(',')
+    .map((input) => input.trim())
+    .map((input) => {
+      if (input.charAt() == '#') {
+        return input.replace('#', '');
+      } else {
+        return undefined;
+      }
+    })
+    .filter((el) => el);
+  return result;
+};
 
 function getData(imageURL) {
   // stock object 가져오기
   const stock = getStock();
+
+  // hashtag
+  const hashtagValue = $hashtag.value;
+  const hashtag = getHashtag(hashtagValue);
 
   const newProductData = {
     name: $title.value,
     brand: $brand.value,
     shortDescription: $shortDescription.value,
     detailDescription: $detailDescription.value,
-    hashtag: $hashtag.value,
+    hashtag,
     price: $price.value,
     category: $categorySelectBox.value,
     imageURL,
