@@ -42,11 +42,30 @@ const ProductSchema = new Schema(
       type: Schema.Types.Mixed,
       required: true,
     },
-    keyword: []
+    keyword: [],
   },
   {
     timestamps: true,
     collection: 'products',
+  },
+);
+
+// indexes
+ProductSchema.index(
+  {
+    name: 'text',
+    shortDescription: 'text',
+    detailDescription: 'text',
+    keyword: 'text',
+  },
+  {
+    weights: {
+      name: 20,
+      keyword: 10,
+      brand: 2,
+      shortDescription: 1,
+      detailDescription: 1,
+    },
   },
 );
 

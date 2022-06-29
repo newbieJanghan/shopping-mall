@@ -10,7 +10,11 @@ export class ProductModel {
   }
 
   async findBySearch(filter) {
-    const product = await Product.find({ name: { $regex: `.*${filter}.*`} });
+    const product = await Product.find(
+      { $text: { $search: filter } },
+      { score: { $meta: 'textScore' } },
+    ).sort({ score: { $meta: 'textScore' } });
+    console.log(product);
     return product;
   }
 

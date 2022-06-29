@@ -6,7 +6,6 @@ const DB_URL =
 
 mongoose.connect(DB_URL);
 const db = mongoose.connection;
-
 db.on('connected', () =>
   console.log('정상적으로 MongoDB 서버에 연결되었습니다.  ' + DB_URL),
 );
