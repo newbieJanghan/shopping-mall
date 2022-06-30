@@ -10,11 +10,60 @@ export class ProductModel {
   }
 
   async findBySearch(filter) {
-    const product = await Product.find(
-      { $text: { $search: filter } },
-      { score: { $meta: 'textScore' } },
-    ).sort({ score: { $meta: 'textScore' } });
+    const product = await Product.aggregate([
+      { $match: { $text: { $search: filter } } },
+      { $sort: { score: { $meta: 'textScore' } } },
+    ]);
+    const regex = await Product.aggregate([
+      {
+        $project: {
+          categoryId: 1,
+          brand: 1,
+          name: 1,
+          shortDescription: 1,
+          detailDescription: 1,
+          imgaeUrl: 1,
+          likeCount: 1,
+          price: 1,
+          shortId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          match: {
+            $switch: {
+              branches: [
+                {
+                  case: {
+                    $regexMatch: {
+                      input: '$name',
+                      regex: `${filter}`,
+                    },
+                  },
+                  then: true,
+                },
+                {
+                  case: {
+                    $regexMatch: {
+                      input: '$shortDescription',
+                      regex: `${filter}`,
+                    },
+                  },
+                  then: true,
+                },
+              ],
+              default: false,
+            },
+          },
+        },
+      },
+      {
+        $match: {
+          match: true,
+        },
+      },
+    ]);
+
     console.log(product);
+    console.log(regex);
     return product;
   }
 
