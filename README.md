@@ -21,14 +21,20 @@
  - 삽질 일기: https://thoughthrough.tistory.com/36
  - 구현 과정
    ** 가장 적절한 검색 결과가 먼저 보일 수 있도록 정렬하기 (by $text, $search, $meta, textScore, $sort)
+   <br>
    ** 검색어를 포함한 텍스트를 찾기 (by $match, $regex)
+   <br>
    ** $text vs $regex 중 하나를 선택해야하는 기능적 한계를 극복하고자 노력함
+   <br>
 
 2. 사이즈, 검색어 field 추가 및 프론트 페이지 구현
   - 구현 과정
     ** 소비자 친숙한 ui 고민
-    ** 재고를 유연하게 추가할 수 있는 동적 버튼과 field 값을 object로 설정
-    ** object 객체를 request.body에 담을 수 있도록 urlencoded 설정 변경 및 qs 라이브러리 사용
+    <br>
+    *** 재고를 유연하게 추가할 수 있는 동적 버튼과 field 값을 object로 설정
+    <br>
+    *** object 객체를 request.body에 담을 수 있도록 urlencoded 설정 변경 및 qs 라이브러리 사용
+    <br>
     ** 검색어에 #을 달아 추가할 수 있도록 구현하고 field 값을 arry로 설정
     
 3. 상위 4개 상품을 추리는 코드의 위치 변경 (진행 중)
@@ -37,6 +43,6 @@
 
 ### 2-1. API 문서
 
-(swagger 준비 중)
+#### (swagger 준비 중)
 
-<br>
+<br />
