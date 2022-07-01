@@ -44,9 +44,7 @@ userRouter.post('/login', async function (req, res, next) {
       );
     }
 
-    // req (request) 에서 데이터 가져오기
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
     // 로그인 진행 (로그인 성공 시 jwt 토큰을 프론트에 보내 줌)
     const userToken = await userService.getUserToken({ email, password });
@@ -84,13 +82,6 @@ userRouter.patch('/', loginRequired, async function (req, res, next) {
     // params로부터 id를 가져옴
     const userId = req.currentUserId;
 
-    // body data 로부터 업데이트할 사용자 정보를 추출함.
-    const fullName = req.body.fullName;
-    const password = req.body.password;
-    const address = req.body.address;
-    const phoneNumber = req.body.phoneNumber;
-    const role = req.body.role;
-
     // body data로부터, 확인용으로 사용할 현재 비밀번호를 추출함.
     const currentPassword = req.body.currentPassword;
 
@@ -101,8 +92,11 @@ userRouter.patch('/', loginRequired, async function (req, res, next) {
 
     const userInfoRequired = { userId, currentPassword };
 
-    // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해
-    // 보내주었다면, 업데이트용 객체에 삽입함.
+    // body data 로부터 업데이트할 사용자 정보를 추출함.
+    const { fullName, password, address, phoneNumber, role } = req.body;
+
+    // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
+    // 따라서 업데이트하지 않은 값이 db 상에서 그대로 유지됨.
     const toUpdate = {
       ...(fullName && { fullName }),
       ...(password && { password }),

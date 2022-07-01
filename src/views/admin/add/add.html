@@ -18,6 +18,14 @@
     <script src="/static/js/navbar.js" type="module"></script>
     <!-- custom -->
     <script src="add.js" type="module" defer></script>
+    <script>
+      // 생성된 tag들이 onclick 이벤트 함수를 읽을 수 있도록 여기에 함수 정의해둠.
+      function delSize(event) {
+        event.preventDefault();
+        const parent = event.target.parentNode;
+        parent.innerHTML = '';
+      }
+    </script>
   </head>
   <body>
     <div id="app">
@@ -99,6 +107,20 @@
                     placeholder="제품에 대한 상세 설명을 적어 주세요."
                     autocomplete="on"
                   ></textarea>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="keywordInput">검색어</label>
+                <label for="keywordInput">반드시 #을 붙여주세요</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="keywordInput"
+                    type="text"
+                    placeholder="#여름, #바지, #베이지"
+                    autocomplete="on"
+                  />
                 </div>
               </div>
 
@@ -189,6 +211,45 @@
                 </button>
               </div>
             </form>
+            <div class="box register-product-form-box">
+              <div class="field">
+                <label class="label" for="sizeInput"
+                  >추가할 사이즈를 입력하세요</label
+                >
+                <div class="control">
+                  <input
+                    class="input"
+                    id="sizeInput"
+                    type="text"
+                    placeholder="S, M, L"
+                    autocomplete="on"
+                  />
+                </div>
+                <button id="addSizeButton">사이즈 추가</button>
+              </div>
+              <div id="addStockBySizeForm" name="stockInputForm">
+                <div class="field" id="XS-container">
+                  <label class="label" for="stockInput">XS</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      name="stockInput"
+                      id="XS"
+                      type="number"
+                      placeholder="100"
+                      autocomplete="on"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="delSizeButton"
+                    onclick="delSize(event)"
+                  >
+                    사이즈 삭제
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- CONTENT : END -->
         </div>

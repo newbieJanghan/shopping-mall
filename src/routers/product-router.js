@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import is from '@sindresorhus/is';
 import { productService, categoryService } from '../services';
-import { pagination, loginRequired } from '../middlewares';
+import { loginRequired } from '../middlewares';
+import { pagination } from '../utils';
 
 const productRouter = Router();
 
@@ -29,6 +30,9 @@ productRouter.get('/', async (req, res, next) => {
 productRouter.get('/search/result', async (req, res, next) => {
   try {
     const { q, currentPage, CountPerPage } = req.query;
+    if (!q) {
+      throw new Error("검색어를 다시 확인해주세요.")
+    }
     const result = await productService.getProductsByName(q);
     const { totalPage, posts } = await pagination(
       result,

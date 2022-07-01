@@ -12,16 +12,16 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
+      keyword,
       imageURL,
       price,
+      stock,
     } = productInfo;
 
-    // 같은 상품 중복을 걸러낼 수 있는 방법이 무엇이 있을까 고민됨
     const product = await this.productModel.findByName(name);
     if (product) {
       throw new Error('이미 해당 상품이 존재합니다.');
     }
-
     const categoryId = await categoryService.getIdByName(category);
     const newProductInfo = {
       categoryId,
@@ -29,8 +29,10 @@ class ProductService {
       name,
       shortDescription,
       detailDescription,
+      keyword,
       imageURL,
       price: Number(price),
+      stock,
     };
 
     // db에 저장
@@ -57,6 +59,9 @@ class ProductService {
 
   // name으로 상품 검색
   async getProductsByName(filter) {
+    if (filter === '') {
+      throw new Error('검색어를 입력하세요.')
+    }
     const products = await this.productModel.findBySearch(filter);
     return products;
   }
@@ -81,7 +86,6 @@ class ProductService {
     if (!product) {
       throw new Error('상품이 존재하지 않습니다. 다시 한 번 확인해 주세요.');
     }
-
     // new category => new categoryId
     const {
       category,
@@ -91,6 +95,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
+      keyword,
     } = await updateRequest;
 
     const update = {
@@ -101,6 +106,7 @@ class ProductService {
       detailDescription,
       imageURL,
       price,
+      keyword,
     };
 
     // 업데이트 진행
@@ -124,7 +130,7 @@ class ProductService {
     if (!product) {
       throw new Error('삭제에 실패하였습니다.');
     }
-    
+
     return product;
   }
 

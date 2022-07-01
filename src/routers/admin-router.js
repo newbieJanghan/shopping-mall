@@ -90,9 +90,9 @@ adminRouter.get('/categories', async (req, res, next) => {
 });
 
 // 카테고리 상세 조회
-adminRouter.get('/categories/:id', adminRequired, async (req, res, next) => {
+adminRouter.get('/categories/:shortId', adminRequired, async (req, res, next) => {
   try {
-    const shortId = req.params.id;
+    const { shortId } = req.params;
     const category = await categoryService.getCategory(shortId);
     res.status(200).json(category);
   } catch (err) {
@@ -102,7 +102,7 @@ adminRouter.get('/categories/:id', adminRequired, async (req, res, next) => {
 
 // 카테고리 변경
 adminRouter.patch(
-  '/categories/:id/update',
+  '/categories/:shortId/update',
   adminRequired,
   async (req, res, next) => {
     try {
@@ -113,13 +113,24 @@ adminRouter.patch(
           'headers의 Content-Type을 application/json으로 설정해주세요',
         );
       }
-      const shortId = req.params.id;
-      const { name, content, imageURL } = req.body;
-      const toUpdate = {
-        name,
-        content,
-        imageURL,
-      };
+      const { shortId } = req.params;
+
+      // const { name, content, imageURL } = req.body;
+      // const toUpdate = {
+      //   ...(name && { name }),
+      //   ...(content && { content }),
+      //   ...(imageURL && { imageURL }),
+      // };
+
+      // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
+      // 따라서 아무 값도 없는 경우 db 상에서 기존 값이 그대로 유지됨.
+      // login에서는 중요하나, product나 category에서는 중요한가? 싶음.
+      const toUpdate = req.body;
+      for (let key of Object.keys(toUpdate)) {
+        if (!toUpdate[key]) {
+          delete toUpdate[key];
+        }
+      }
 
       const updatedCategory = await categoryService.setCategory(
         shortId,
@@ -134,11 +145,11 @@ adminRouter.patch(
 
 // 카테고리 삭제
 adminRouter.delete(
-  '/categories/:id/delete',
+  '/categories/:shortId/delete',
   adminRequired,
   async (req, res, next) => {
     try {
-      const shortId = req.params.id;
+      const { shortId } = req.params;
       const result = await categoryService.deleteCategory(shortId);
       res.status(200).json(result);
     } catch (err) {
@@ -160,18 +171,22 @@ adminRouter.post('/products', adminRequired, async (req, res, next) => {
       name,
       shortDescription,
       detailDescription,
+      keyword,
       imageURL,
       price,
+      stock
     } = req.body;
-
+    
     const newproduct = await productService.addProduct({
       category,
       brand,
       name,
       shortDescription,
       detailDescription,
+      keyword,
       imageURL,
       price,
+      stock
     });
     res.status(200).json(newproduct);
   } catch (err) {
@@ -190,9 +205,9 @@ adminRouter.get('/products', adminRequired, async (req, res, next) => {
 });
 
 // 상품 상세 조회
-adminRouter.get('/products/:id', adminRequired, async (req, res, next) => {
+adminRouter.get('/products/:shortId', adminRequired, async (req, res, next) => {
   try {
-    const shortId = req.params.id;
+    const { shortId } = req.params;
     const product = await productService.getProduct(shortId);
     res.status(200).json(product);
   } catch (err) {
@@ -202,11 +217,11 @@ adminRouter.get('/products/:id', adminRequired, async (req, res, next) => {
 
 // 상품 삭제
 adminRouter.delete(
-  '/products/:id/delete',
+  '/products/:shortId/delete',
   adminRequired,
   async (req, res, next) => {
     try {
-      const shortId = req.params.id;
+      const { shortId } = req.params;
       const result = await productService.deleteProduct(shortId);
       res.status(200).json(result);
     } catch (err) {
@@ -216,19 +231,53 @@ adminRouter.delete(
 );
 
 // 상품 정보 수정
-adminRouter.patch('/products/:id', adminRequired, async (req, res, next) => {
-  try {
-    const shortId = req.params.id;
-    const updateRequest = req.body;
-    const updatedProduct = await productService.setProduct(
-      shortId,
-      updateRequest,
-    );
-    res.status(200).json(updatedProduct);
-  } catch (err) {
-    next(err);
-  }
-});
+adminRouter.patch(
+  '/products/:shortId',
+  adminRequired,
+  async (req, res, next) => {
+    try {
+      const { shortId } = req.params;
+      // const {
+      //   category,
+      //   brand,
+      //   name,
+      //   shortDescription,
+      //   detailDescription,
+      //   imageURL,
+      //   price,
+      //   likeCount,
+      //   likeUsers,
+      // } = req.body;
+
+      // const toUpdate = {
+      //   ...(category && { category }),
+      //   ...(brand && { brand }),
+      //   ...(name && { name }),
+      //   ...(shortDescription && { shortDescription }),
+      //   ...(detailDescription && { detailDescription }),
+      //   ...(imageURL && { imageURL }),
+      //   ...(price && { price }),
+      //   ...(likeCount && { likeCount }),
+      //   ...(likeUsers && { likeUsers }),
+      // };
+
+      // 프론트 데이터가 undefined 또는 없다면 toUpdate 객체에 담기지 않음
+      // 따라서 아무 값도 없는 경우 db 상에서 기존 값이 그대로 유지됨.
+      // login에서는 중요하나, product나 category에서는 중요한가? 싶음.
+      const toUpdate = req.body;
+      for (let key of Object.keys(toUpdate)) {
+        if (!toUpdate[key]) {
+          delete toUpdate[key];
+        }
+      }
+
+      const updatedProduct = await productService.setProduct(shortId, toUpdate);
+      res.status(200).json(updatedProduct);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 /******************************/
 /********* user,order *********/
