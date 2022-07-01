@@ -11,59 +11,113 @@ export class ProductModel {
 
   async findBySearch(filter) {
     const product = await Product.aggregate([
-      { $match: { $text: { $search: filter } } },
-      { $sort: { score: { $meta: 'textScore' } } },
-    ]);
-    const regex = await Product.aggregate([
       {
-        $project: {
-          categoryId: 1,
-          brand: 1,
-          name: 1,
-          shortDescription: 1,
-          detailDescription: 1,
-          imgaeUrl: 1,
-          likeCount: 1,
-          price: 1,
-          shortId: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          match: {
-            $switch: {
-              branches: [
-                {
-                  case: {
-                    $regexMatch: {
-                      input: '$name',
-                      regex: `${filter}`,
-                    },
-                  },
-                  then: true,
-                },
-                {
-                  case: {
-                    $regexMatch: {
-                      input: '$shortDescription',
-                      regex: `${filter}`,
-                    },
-                  },
-                  then: true,
-                },
-              ],
-              default: false,
-            },
+        $match: {
+          $text: {
+            $search: filter,
           },
         },
       },
+      { $addFields: { score: { $meta: 'textScore' } } },
       {
-        $match: {
-          match: true,
+        $unionWith: {
+          coll: 'products',
+          pipeline: [
+            {
+              $match: {
+                $or: [
+                  {
+                    name: {
+                      $regex: `${filter}`,
+                    },
+                  },
+                  {
+                    shortDescription: {
+                      $regex: `${filter}`,
+                    },
+                  },
+                  {
+                    keyword: {
+                      $elemMatch: { $regex: `${filter}` },
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $addFields: { score: 1 },
+            },
+          ],
+        },
+      },
+      { $sort: { score: -1 } },
+      {
+        $group: {
+          _id: '$_id',
+          categoryId: { $first: '$categoryId' },
+          brand: { $first: '$brand' },
+          name: { $first: '$name' },
+          shortDescription: { $first: '$shortDescription' },
+          detailDescription: { $first: '$detailDescription' },
+          imageURL: { $first: '$imageURL' },
+          price: { $first: '$price' },
+          likeCount: { $first: '$likeCount' },
+          createdAt: { $first: '$createdAt' },
+          updatedAt: { $first: '$updatedAt' },
+          __v: { $first: '$__v' },
+          score: { $sum: '$score' },
         },
       },
     ]);
-
-    console.log(product);
-    console.log(regex);
+    // const regex = await Product.aggregate([
+    //   {
+    //     $project: {
+    //       categoryId: 1,
+    //       brand: 1,
+    //       name: 1,
+    //       shortDescription: 1,
+    //       detailDescription: 1,
+    //       imgaeUrl: 1,
+    //       likeCount: 1,
+    //       price: 1,
+    //       shortId: 1,
+    //       createdAt: 1,
+    //       updatedAt: 1,
+    //       keyword: 1,
+    //       match: {
+    //         $switch: {
+    //           branches: [
+    //             {
+    //               case: {
+    //                 $regexMatch: {
+    //                   input: '$name',
+    //                   regex: `${filter}`,
+    //                 },
+    //               },
+    //               then: true,
+    //             },
+    //             {
+    //               case: {
+    //                 $regexMatch: {
+    //                   input: '$shortDescription',
+    //                   regex: `${filter}`,
+    //                 },
+    //               },
+    //               then: true,
+    //             },
+    //           ],
+    //           default: false,
+    //         },
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $match: {
+    //       match: true,
+    //     },
+    //   },
+    // ]);
+    console.log(product)
     return product;
   }
 
