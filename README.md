@@ -41,8 +41,8 @@
 
 <br />
 
-### 2-1. API 문서
+## 3. API 문서
 
-#### (swagger 준비 중)
+(swagger 준비 중)
 
 <br />
