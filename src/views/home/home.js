@@ -82,7 +82,11 @@ function printProductList(ele, products) {
 
 async function getProductList(ele, getApi) {
   try {
+    const start = +new Date()
     const result = await Api.get(`/api/products/list/${getApi}`);
+    const end = +new Date()
+    const diff = end - start
+    console.log("time: ", diff)
     printProductList(ele, result);
   } catch (err) {
     console.error(err);
