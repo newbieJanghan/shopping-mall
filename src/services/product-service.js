@@ -143,6 +143,12 @@ class ProductService {
     );
     return updatedLike;
   }
+
+  //특정 필드에 대해 순위권 출력
+  async getProductsByFieldRank(field, sort, limit) {
+    const products = await this.productModel.findByRank(field, sort, limit)
+    return products;
+  }
 }
 
 const productService = new ProductService(productModel);

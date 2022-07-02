@@ -11,48 +11,23 @@ export class ProductModel {
 
   async findBySearch(filter) {
     const product = await Product.aggregate([
-      {
-        $match: {
-          $text: {
-            $search: filter,
-          },
-        },
-      },
+      { $match: { $text: { $search: filter } } },
       { $addFields: { score: { $meta: 'textScore' } } },
-      {
-        $unionWith: {
+      { $unionWith: {
           coll: 'products',
           pipeline: [
-            {
-              $match: {
+            { $match: {
                 $or: [
-                  {
-                    name: {
-                      $regex: `${filter}`,
-                    },
-                  },
-                  {
-                    shortDescription: {
-                      $regex: `${filter}`,
-                    },
-                  },
-                  {
-                    keyword: {
-                      $elemMatch: { $regex: `${filter}` },
-                    },
-                  },
+                  { name: { $regex: `${filter}`} },
+                  { shortDescription: { $regex: `${filter}` } },
+                  { keyword: { $elemMatch: { $regex: `${filter}` } } },
                 ],
-              },
-            },
-            {
-              $addFields: { score: 1 },
-            },
+            } },
+            { $addFields: { score: 1 } },
           ],
-        },
-      },
+      }},
       { $sort: { score: -1 } },
-      {
-        $group: {
+      { $group: {
           _id: '$_id',
           categoryId: { $first: '$categoryId' },
           brand: { $first: '$brand' },
@@ -66,8 +41,7 @@ export class ProductModel {
           updatedAt: { $first: '$updatedAt' },
           __v: { $first: '$__v' },
           score: { $sum: '$score' },
-        },
-      },
+      }},
     ]);
     // const regex = await Product.aggregate([
     //   {
@@ -188,6 +162,11 @@ export class ProductModel {
       );
     }
     return updatedLike;
+  }
+
+  async findByRank(field, sort, limit) {
+    const products = await Product.find().sort({[field]: sort}).limit(limit)
+    return products
   }
 }
 
