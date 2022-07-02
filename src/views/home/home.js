@@ -56,6 +56,10 @@ const $homeProductListLikes = document.querySelector(
 getProductList($homeProductListNew, 'new');
 getProductList($homeProductListLikes, 'likes');
 
+setInterval(() => {
+  getProductList($homeProductListNew, 'new');
+}, 1000)
+
 function printProductList(ele, products) {
   const dataProduct = products.reduce((acc, product) => {
     return (acc += `<div class="home-product-list-item">
