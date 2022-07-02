@@ -56,9 +56,25 @@ const $homeProductListLikes = document.querySelector(
 getProductList($homeProductListNew, 'new');
 getProductList($homeProductListLikes, 'likes');
 
-setInterval(() => {
-  getProductList($homeProductListNew, 'new');
-}, 1000)
+let timeAcc = 0
+timeTest();
+
+async function timeTest() {
+  console.log("start");
+  let count = 0
+  let interval = setInterval(() => {
+    getProductList($homeProductListNew, 'new')
+    count += 1
+    console.log("count:", count)
+  }, 1000)
+    
+  setTimeout(() => {
+    clearInterval(interval)
+    setTimeout(() => {
+      console.log("Avg: ", timeAcc/count)
+    }, 1000)
+  }, 50000)
+}
 
 function printProductList(ele, products) {
   const dataProduct = products.reduce((acc, product) => {
@@ -85,15 +101,12 @@ function printProductList(ele, products) {
 }
 
 async function getProductList(ele, getApi) {
-  try {
-    const start = +new Date()
-    const result = await Api.get(`/api/products/list/${getApi}`);
-    const end = +new Date()
-    const diff = end - start
-    console.log("time:", diff)
-    printProductList(ele, result);
-  } catch (err) {
-    console.error(err);
-    alert(`${err.message}`);
-  }
+  const start = +new Date()
+  const result = await Api.get(`/api/products/list/${getApi}`);
+  const end = +new Date()
+  const diff = end - start
+  timeAcc += diff
+  console.log("time:", diff)
+  console.log("timeAcc:", timeAcc);
+  printProductList(ele, result)
 }
