@@ -63,10 +63,7 @@ productRouter.get('/:id', async (req, res, next) => {
 // 메인화면 "HOT" 상품 조회
 productRouter.get('/list/likes', async (req, res, next) => {
   try {
-    const allProducts = await productService.getProducts();
-    const products = allProducts
-      .sort((a, b) => b.likeCount - a.likeCount)
-      .slice(0, 4);
+    const products = await productService.getProductsByFieldRank("likeCount", -1, 4)
     res.status(200).json(products);
   } catch (err) {
     next(err);
@@ -76,10 +73,7 @@ productRouter.get('/list/likes', async (req, res, next) => {
 // 메인화면 "NEW" 상품 조회
 productRouter.get('/list/new', async (req, res, next) => {
   try {
-    const allProducts = await productService.getProducts();
-    const products = allProducts
-      .sort((a, b) => b.createdAt - a.createdAt)
-      .slice(0, 4);
+    const products = await productService.getProductsByFieldRank("createdAt", -1, 4)
     res.status(200).json(products);
   } catch (err) {
     next(err);

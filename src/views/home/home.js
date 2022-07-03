@@ -82,8 +82,8 @@ function printProductList(ele, products) {
 
 async function getProductList(ele, getApi) {
   try {
-    const data = await Api.get(`/api/products/list/${getApi}`);
-    const result = data.splice(0, 4);
+    const result = await Api.get(`/api/products/list/${getApi}`);
+
     printProductList(ele, result);
   } catch (err) {
     console.error(err);
