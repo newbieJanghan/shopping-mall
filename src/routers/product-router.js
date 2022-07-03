@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import is from '@sindresorhus/is';
 import { productService, categoryService } from '../services';
-import { pagination, loginRequired } from '../middlewares';
+import { loginRequired } from '../middlewares';
+import { pagination } from '../utils';
 
 const productRouter = Router();
 
@@ -29,6 +30,9 @@ productRouter.get('/', async (req, res, next) => {
 productRouter.get('/search/result', async (req, res, next) => {
   try {
     const { q, currentPage, CountPerPage } = req.query;
+    if (!q) {
+      throw new Error("검색어를 다시 확인해주세요.")
+    }
     const result = await productService.getProductsByName(q);
     const { totalPage, posts } = await pagination(
       result,
@@ -59,10 +63,7 @@ productRouter.get('/:id', async (req, res, next) => {
 // 메인화면 "HOT" 상품 조회
 productRouter.get('/list/likes', async (req, res, next) => {
   try {
-    const allProducts = await productService.getProducts();
-    const products = allProducts
-      .sort((a, b) => b.likeCount - a.likeCount)
-      .slice(0, 4);
+    const products = await productService.getProductsByFieldRank("likeCount", -1, 4)
     res.status(200).json(products);
   } catch (err) {
     next(err);
@@ -72,10 +73,7 @@ productRouter.get('/list/likes', async (req, res, next) => {
 // 메인화면 "NEW" 상품 조회
 productRouter.get('/list/new', async (req, res, next) => {
   try {
-    const allProducts = await productService.getProducts();
-    const products = allProducts
-      .sort((a, b) => b.createdAt - a.createdAt)
-      .slice(0, 4);
+    const products = await productService.getProductsByFieldRank("createdAt", -1, 4)
     res.status(200).json(products);
   } catch (err) {
     next(err);

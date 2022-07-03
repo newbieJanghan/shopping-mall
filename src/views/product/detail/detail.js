@@ -45,6 +45,12 @@ async function addAllEvents(data) {
   });
 }
 
+function printTag(keyword) {
+  return keyword
+    .map(el => "#"+el)
+    .reduce((acc, cur) => (acc += `, ${cur}`),);
+}
+
 const token = localStorage.getItem('token');
 
 async function detailText() {
@@ -76,6 +82,9 @@ async function detailText() {
               <p class="detail-price">${addCommas(data.price)}</p>
               <p class="p-contents">
                 ${data.detailDescription}
+              </p>
+              <p class="p-contents">
+                ${printTag(data.keyword)}
               </p>
               <div>
                 <div class="btn-wrap">

@@ -7,11 +7,13 @@ const $categories = document.querySelector('#categorySelectBox');
 const $brand = document.querySelector('#productBrand');
 const $shortDescription = document.querySelector('#shortDescription');
 const $detailDescription = document.querySelector('#detailDescription');
+const $keyword = document.querySelector('#keyword');
 const $editButton = document.querySelector('#editButton');
 const $deleteAcceptButton = document.querySelector('#deleteAcceptButton');
 const $imageInput = document.querySelector('#imageInput');
 const $fileForm = document.querySelector('#fileForm');
 const $fileNameSpan = document.querySelector('#fileNameSpan');
+const $stockSpan = document.querySelector('#stockSpan');
 
 const elements = [
   $title,
@@ -20,6 +22,7 @@ const elements = [
   $brand,
   $shortDescription,
   $detailDescription,
+  $keyword,
 ];
 
 const path = window.location.pathname.split('/');
@@ -64,24 +67,65 @@ async function printDetail() {
     $brand.value = product.brand;
     $shortDescription.value = product.shortDescription;
     $detailDescription.value = product.detailDescription;
+    $keyword.value = product.keyword
+      .map(el => "#" + el)
+      .reduce(
+      (acc, cur) => (acc += `, ${cur}`),
+    );
     $image.src = product.imageURL;
+    const stock = product.stock;
+    if (typeof stock !== 'object') {
+      $stockSpan.textContent = '재고 없음';
+    } else {
+      const keys = Object.keys(stock);
+      const stockText = keys.reduce(
+        (acc, key) =>
+          (acc += `${key}: ${stock[key]}
+      `),
+        '',
+      );
+      $stockSpan.textContent = stockText;
+    }
   } catch (error) {
     console.error(error);
   }
 }
 
-async function patchData() {
-  const newProductData = {
-    name: $title.value,
-    brand: $brand.value,
-    price: $price.value,
-    category: $categories.value,
-    shortDescription: $shortDescription.value,
-    detailDescription: $detailDescription.value,
-    imageURL: $image.src,
-  };
+function getKeyword(keyword) {
+  const result = keyword
+    .split(',')
+    .map((input) => input.trim())
+    .map((input) => {
+      if (input.charAt() == '#') {
+        return input.replace('#', '');
+      } else {
+        return undefined;
+      }
+    })
+    .filter((el) => el);
+  return result;
+};
 
-  await Api.patch('/api/admin/products', id, newProductData);
+async function patchData() {
+  try {
+    const keywordValue = $keyword.value
+    const keyword = getKeyword(keywordValue)
+
+    const newProductData = {
+      name: $title.value,
+      brand: $brand.value,
+      price: $price.value,
+      category: $categories.value,
+      shortDescription: $shortDescription.value,
+      detailDescription: $detailDescription.value,
+      keyword,
+      imageURL: $image.src,
+    };
+
+    await Api.patch('/api/admin/products', id, newProductData);
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function editDetail(event) {

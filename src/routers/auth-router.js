@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { setUserToken } from '../utils/jwt';
+import { setUserToken } from '../utils';
 
 const authRouter = Router();
 
