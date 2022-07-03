@@ -1,10 +1,11 @@
-# Elice SW 2기 웹 개발 프로젝트 - 쇼핑몰 웰 클론 코딩
+# Elice SW 2기 웹 개발 프로젝트 
+# 쇼핑몰 웰 클론 코딩
 
 <br />
 
 ## 1. 서비스 링크
 
-(배포 예정)
+https://shoppingmall-clonecoding.herokuapp.com/
 
 <br />
 
