@@ -6,7 +6,11 @@
   "license": "MIT",
   "scripts": {
     "sass-watch": "sass --no-source-map --watch src/public/sass/main.scss src/public/css/main.css",
-    "start": "concurrently \"nodemon index.js --exec babel-node\" \"npm run sass-watch\""
+    "start": "concurrently \"nodemon index.js --exec babel-node\" \"npm run sass-watch\"",
+    "heroku-postbuild": "npm install"
+  },
+  "engines": {
+    "node": "16.14.0"
   },
   "dependencies": {
     "@sindresorhus/is": "^4.6.0",
