@@ -4,9 +4,8 @@ import { User } from '../../db';
 
 // 구글 OAuth 설정
 const config = {
-  clientID:
-    '312727609194-3el2crp6j6l9edji1bvnuqh6iq49uab0.apps.googleusercontent.com', // clientId 설정하기
-  clientSecret: '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', // clientSecret 설정하기
+  clientID: process.env.GOOGLE_OAUTH_ID,
+  clientSecret: process.env.GOOGLE_OAUTH_SECRET,
   callbackURL: '/auth/google/callback',
 };
 
