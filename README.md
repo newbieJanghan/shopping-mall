@@ -4,7 +4,7 @@
 
 ## 1. 서비스 링크
 
-(배포 예정)
+https://shoppingmall-clonecoding.herokuapp.com/
 
 <br />
 
